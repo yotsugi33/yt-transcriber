@@ -1,5 +1,4 @@
 from youtube_transcript_api import YouTubeTranscriptApi
-import argparse
 import sys
 
 def get_video_id(url):
@@ -9,7 +8,7 @@ def get_video_id(url):
     elif "youtube.com" in url:
         if "v=" in url:
             return url.split("v=")[1].split("&")[0]
-    return url  # Assume it's already a video ID if not a URL
+    return url
 
 def get_transcript(video_id):
     """Retrieve transcript for a given video ID."""
@@ -35,30 +34,30 @@ def format_transcript(transcript_list):
     
     return "\n".join(formatted_transcript)
 
-def save_transcript(transcript, output_file=None):
-    """Save transcript to file or print to console."""
-    if output_file:
+def save_transcript(transcript):
+    """Save transcript to file or print to console based on user choice."""
+    save_choice = input("Do you want to save the transcript to a file? (yes/no): ").lower()
+    
+    if save_choice.startswith('y'):
+        filename = input("Enter the filename to save the transcript (e.g., transcript.txt): ")
         try:
-            with open(output_file, 'w', encoding='utf-8') as f:
+            with open(filename, 'w', encoding='utf-8') as f:
                 f.write(transcript)
-            print(f"Transcript saved to {output_file}")
+            print(f"Transcript saved to {filename}")
         except Exception as e:
             print(f"Error saving transcript: {str(e)}")
     else:
+        print("\nTranscript:")
         print(transcript)
 
 def main():
-    parser = argparse.ArgumentParser(description="Download YouTube video transcripts")
-    parser.add_argument("url", help="YouTube video URL or ID")
-    parser.add_argument("-o", "--output", help="Output file path (optional)")
-    args = parser.parse_args()
-
-    video_id = get_video_id(args.url)
+    url = input("Please paste the YouTube video URL: ")
+    video_id = get_video_id(url)
     transcript_list = get_transcript(video_id)
     
     if transcript_list:
         formatted_transcript = format_transcript(transcript_list)
-        save_transcript(formatted_transcript, args.output)
+        save_transcript(formatted_transcript)
     else:
         sys.exit(1)
 
