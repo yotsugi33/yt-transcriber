@@ -2,6 +2,7 @@ import whisper
 from pytube import YouTube
 import os
 import sys
+import warnings
 
 def download_audio(url, output_path="audio_temp.mp4"):
     """Download audio from YouTube video."""
