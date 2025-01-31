@@ -1,14 +1,20 @@
 import whisper
-from pytube import YouTube
 import os
 import sys
+import yt_dlp
+
 
 def download_audio(url, output_path="audio_temp.mp4"):
-    """Download audio from YouTube video."""
+    """Download audio using yt-dlp."""
     try:
-        yt = YouTube(url)
-        audio_stream = yt.streams.filter(only_audio=True).first()
-        audio_stream.download(filename=output_path)
+        import yt_dlp
+        ydl_opts = {
+            'format': 'bestaudio/best',
+            'outtmpl': output_path,
+            'quiet': True
+        }
+        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+            ydl.download([url])
         return output_path
     except Exception as e:
         print(f"Error downloading audio: {str(e)}")
